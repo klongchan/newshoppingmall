@@ -1,5 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shoppingmall/utility/my_constant.dart';
+import 'package:shoppingmall/utility/my_dialog.dart';
+import 'package:shoppingmall/widgets/show_image.dart';
 import 'package:shoppingmall/widgets/show_title.dart';
 
 class CreateAccount extends StatefulWidget {
@@ -11,6 +17,69 @@ class CreateAccount extends StatefulWidget {
 
 class _CreateAccountState extends State<CreateAccount> {
   String? typeUser;
+  File? file;
+  double? lat, lng;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    checkPermission();
+  }
+
+  Future<Null> checkPermission() async {
+    bool locationService;
+    LocationPermission locationPermission;
+
+    locationService = await Geolocator.isLocationServiceEnabled();
+    if (locationService) {
+      print('Service Location Open');
+
+      locationPermission = await Geolocator.checkPermission();
+      if (locationPermission == LocationPermission.denied) {
+        locationPermission = await Geolocator.requestPermission();
+        if (locationPermission == LocationPermission.deniedForever) {
+          Mydialog().alertLocationService(
+              context, 'ไม่อนุญาติ แชร์ Location', 'โปรดแชร์ Location');
+        } else {
+          //Find LatLang
+          findLatLng();
+        }
+      } else {
+        if (locationPermission == LocationPermission.deniedForever) {
+          Mydialog().alertLocationService(
+              context, 'ไม่อนุญาติ แชร์ Location', 'โปรดแชร์ Location');
+        } else {
+          //Find LatLng
+          findLatLng();
+        }
+      }
+    } else {
+      print('Service Location Close');
+      Mydialog().alertLocationService(context, 'LocationService ปิดอยู่ ?',
+          'กรุณาเปิด Location Serivce ด้วยค่ะ');
+    }
+  }
+
+  Future<Null> findLatLng() async {
+    print('findLatLan ==> Work');
+    Position? position = await findPostion();
+    setState(() {
+      lat = position!.latitude;
+      lng = position.longitude;
+      print('lat = $lat, lng = $lng');
+    });
+  }
+
+  Future<Position?> findPostion() async {
+    Position position;
+    try {
+      position = await Geolocator.getCurrentPosition();
+      return position;
+    } catch (e) {
+      return null;
+    }
+  }
 
   Row buildName(double size) {
     return Row(
@@ -191,9 +260,69 @@ class _CreateAccountState extends State<CreateAccount> {
             buildPhone(size),
             buildUser(size),
             buildPassword(size),
+            buildTitle('รูปภาพ'),
+            buildSubTitle(),
+            buildAvatar(size),
+            buildTitle('แสดงพิกัดที่คุณอยู๋'),
+            buildMap(),
           ],
         ),
       ),
+    );
+  }
+
+  Widget buildMap() => Text('Lat = $lat, lng = $lng');
+
+  Future<Null> chooseImage(ImageSource source) async {
+    try {
+      var result = await ImagePicker().getImage(
+        source: source,
+        maxWidth: 800,
+        maxHeight: 800,
+      );
+      setState(() {
+        file = File(result!.path);
+      });
+    } catch (e) {}
+  }
+
+  Row buildAvatar(double size) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        IconButton(
+          onPressed: () => chooseImage(ImageSource.camera),
+          icon: Icon(
+            Icons.add_a_photo,
+            size: 36,
+            color: MyConstant.dark,
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.symmetric(vertical: 16),
+          width: size * 0.6,
+          child: file == null
+              ? ShowImage(path: MyConstant.avatar)
+              : Image.file(file!),
+        ),
+        IconButton(
+          onPressed: () => chooseImage(ImageSource.gallery),
+          icon: Icon(
+            Icons.add_photo_alternate,
+            size: 36,
+            color: MyConstant.dark,
+          ),
+        ),
+      ],
+    );
+  }
+
+  ShowTitle buildSubTitle() {
+    return ShowTitle(
+      title:
+          'เป็นรูปภาพ ที่แสดงความเป็นตัวตนของ User (แต่ถ้าไม่สะดวกแชร์ เราจะแสดงภาพ default แทน)',
+      textStyle: MyConstant().h3Style(),
     );
   }
 
