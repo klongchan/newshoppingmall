@@ -2,10 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shoppingmall/utility/my_constant.dart';
 import 'package:shoppingmall/utility/my_dialog.dart';
 import 'package:shoppingmall/widgets/show_image.dart';
+import 'package:shoppingmall/widgets/show_progress.dart';
 import 'package:shoppingmall/widgets/show_title.dart';
 
 class CreateAccount extends StatefulWidget {
@@ -263,7 +265,7 @@ class _CreateAccountState extends State<CreateAccount> {
             buildTitle('รูปภาพ'),
             buildSubTitle(),
             buildAvatar(size),
-            buildTitle('แสดงพิกัดที่คุณอยู๋'),
+            buildTitle('แสดงพิกัดที่คุณอยู่'),
             buildMap(),
           ],
         ),
@@ -271,7 +273,19 @@ class _CreateAccountState extends State<CreateAccount> {
     );
   }
 
-  Widget buildMap() => Text('Lat = $lat, lng = $lng');
+  Widget buildMap() => Container(
+        width: double.infinity,
+        height: 200,
+        child: lat == null
+            ? ShowProgress()
+            : GoogleMap(
+                initialCameraPosition: CameraPosition(
+                  target: LatLng(lat!, lng!),
+                  zoom: 16,
+                ),
+                onMapCreated: (controller) {},
+              ),
+      );
 
   Future<Null> chooseImage(ImageSource source) async {
     try {
