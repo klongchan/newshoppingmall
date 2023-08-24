@@ -355,7 +355,13 @@ class _CreateAccountState extends State<CreateAccount> {
 
         if (file == null) {
           // No Avatar
-          processInsertMySQL();
+          processInsertMySQL(
+            name: name,
+            address: address,
+            phone: phone,
+            user: user,
+            password: password,
+          );
         } else {
           // Have Avatar
           print('## process Upload Avatar');
@@ -369,7 +375,13 @@ class _CreateAccountState extends State<CreateAccount> {
           FormData data = FormData.fromMap({...map});
           await Dio().post(apiSaveAvatar, data: data).then((value) {
             avatar = '/shoppingmall/avatar/$nameAvatar';
-            processInsertMySQL();
+            processInsertMySQL(
+              name: name,
+              address: address,
+              phone: phone,
+              user: user,
+              password: password,
+            );
           });
         }
       } else {
@@ -378,8 +390,23 @@ class _CreateAccountState extends State<CreateAccount> {
     });
   }
 
-  Future<Null> processInsertMySQL() async {
+  Future<Null> processInsertMySQL(
+      {String? name,
+      String? address,
+      String? phone,
+      String? user,
+      String? password}) async {
     print('## processInsertMySQL Work and avatar ==>>>$avatar');
+    String apiInsertUser =
+        '${MyConstant.domain}/shoppingmall/insertUser.php?isAdd=true&name=$name&type=$typeUser&address=$address&phone=$phone&user=$user&password=$password&avatar=$avatar&lat=$lat&lng=$lng';
+    await Dio().get(apiInsertUser).then((value) {
+      if (value.toString() == 'true') {
+        Navigator.pop(context);
+      } else {
+        Mydialog().normalDialog(
+            context, 'Create New User False !!!', 'Please Try Again');
+      }
+    });
   }
 
   Set<Marker> setMarker() => <Marker>[
