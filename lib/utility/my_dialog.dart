@@ -6,7 +6,7 @@ import 'package:shoppingmall/utility/my_constant.dart';
 import 'package:shoppingmall/widgets/show_image.dart';
 import 'package:shoppingmall/widgets/show_title.dart';
 
-class Mydialog {
+class MyDialog {
   Future<Null> alertLocationService(
       BuildContext context, String title, String message) async {
     showDialog(

@@ -50,7 +50,7 @@ class _CreateAccountState extends State<CreateAccount> {
       if (locationPermission == LocationPermission.denied) {
         locationPermission = await Geolocator.requestPermission();
         if (locationPermission == LocationPermission.deniedForever) {
-          Mydialog().alertLocationService(
+          MyDialog().alertLocationService(
               context, 'ไม่อนุญาติ แชร์ Location', 'โปรดแชร์ Location');
         } else {
           //Find LatLang
@@ -58,7 +58,7 @@ class _CreateAccountState extends State<CreateAccount> {
         }
       } else {
         if (locationPermission == LocationPermission.deniedForever) {
-          Mydialog().alertLocationService(
+          MyDialog().alertLocationService(
               context, 'ไม่อนุญาติ แชร์ Location', 'โปรดแชร์ Location');
         } else {
           //Find LatLng
@@ -67,7 +67,7 @@ class _CreateAccountState extends State<CreateAccount> {
       }
     } else {
       print('Service Location Close');
-      Mydialog().alertLocationService(context, 'LocationService ปิดอยู่ ?',
+      MyDialog().alertLocationService(context, 'LocationService ปิดอยู่ ?',
           'กรุณาเปิด Location Serivce ด้วยค่ะ');
     }
   }
@@ -326,7 +326,7 @@ class _CreateAccountState extends State<CreateAccount> {
         if (formKey.currentState!.validate()) {
           if (typeUser == null) {
             print('Non Choose Type User');
-            Mydialog().normalDialog(context, 'ยังไม่ได้เลือก ชนิดของ User',
+            MyDialog().normalDialog(context, 'ยังไม่ได้เลือก ชนิดของ User',
                 'กรุณา Tap ที่ชนิดของ User ที่ต้องการ');
           } else {
             print('Process Insert to Database');
@@ -385,7 +385,7 @@ class _CreateAccountState extends State<CreateAccount> {
           });
         }
       } else {
-        Mydialog().normalDialog(context, 'User False ?', 'Please Chang User');
+        MyDialog().normalDialog(context, 'User False ?', 'Please Chang User');
       }
     });
   }
@@ -403,7 +403,7 @@ class _CreateAccountState extends State<CreateAccount> {
       if (value.toString() == 'true') {
         Navigator.pop(context);
       } else {
-        Mydialog().normalDialog(
+        MyDialog().normalDialog(
             context, 'Create New User False !!!', 'Please Try Again');
       }
     });

@@ -1,6 +1,8 @@
+// ignore: unused_import
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shoppingmall/states/authen.dart';
 import 'package:shoppingmall/states/buyer_service.dart';
 import 'package:shoppingmall/states/create_account.dart';
@@ -18,13 +20,35 @@ final Map<String, WidgetBuilder> map = {
 
 String? initlalRoute;
 
-void main() {
-  initlalRoute = MyConstant.routeAuthen;
-  runApp(MyApp());
+Future<Null> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  String? type = preferences.getString('type');
+  print('### type ===>> $type');
+  if (type?.isEmpty ?? true) {
+    initlalRoute = MyConstant.routeAuthen;
+    runApp(MyApp());
+  } else {
+    switch (type) {
+      case 'buyer':
+        initlalRoute = MyConstant.routeBuyerService;
+        runApp(MyApp());
+        break;
+          case 'seller':
+        initlalRoute = MyConstant.routeSalerService;
+        runApp(MyApp());
+        break;
+          case 'rider':
+        initlalRoute = MyConstant.routeRiderService;
+        runApp(MyApp());
+        break;
+      default:
+    }
+  }
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
