@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class MyConstant {
   // Genernal
   static String appName = 'Shopping Mall';
-  static String domain = 'https://8e38-2001-fb1-49-3ff6-38aa-ce38-86f2-518b.ngrok-free.app';
+  static String domain ='https://8515-124-120-207-170.ngrok-free.app';
 
   // Route
   static String routeAuthen = '/authen';
@@ -21,8 +21,22 @@ class MyConstant {
 
   // Color
   static Color primary = Color(0xff438743);
-  static Color dark = Color(0xff0e5919);
+  static Color dark = Color(0xff575900);
   static Color light = Color(0xff73b76f);
+  static Map<int, Color> mapMaterialColor = {
+    //    Colors.red[50]: 0xFFEFEBEB,
+    50:Color.fromRGBO(255, 87, 89, 0.1),
+    100:Color.fromRGBO(255, 87, 89, 0.2),
+    200:Color.fromRGBO(255, 87, 89, 0.3),
+    300:Color.fromRGBO(255, 87, 89, 0.4),
+    400:Color.fromRGBO(255, 87, 89, 0.5),
+    500:Color.fromRGBO(255, 87, 89, 0.6),
+    600:Color.fromRGBO(255, 87, 89, 0.7),
+    700:Color.fromRGBO(255, 87, 89, 0.8),
+    800:Color.fromRGBO(255, 87, 89, 0.9),
+    900:Color.fromRGBO(255, 87, 89, 1.0),
+    
+  };
 
   // Style
   TextStyle h1Style() => TextStyle(

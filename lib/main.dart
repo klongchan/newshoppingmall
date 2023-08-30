@@ -34,11 +34,11 @@ Future<Null> main() async {
         initlalRoute = MyConstant.routeBuyerService;
         runApp(MyApp());
         break;
-          case 'seller':
+      case 'seller':
         initlalRoute = MyConstant.routeSalerService;
         runApp(MyApp());
         break;
-          case 'rider':
+      case 'rider':
         initlalRoute = MyConstant.routeRiderService;
         runApp(MyApp());
         break;
@@ -52,10 +52,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    MaterialColor materialColor =
+        MaterialColor(0xff0e5919, MyConstant.mapMaterialColor);
     return MaterialApp(
       title: MyConstant.appName,
       routes: map,
       initialRoute: initlalRoute,
+      theme: ThemeData(primarySwatch: materialColor),
     );
   }
 }
