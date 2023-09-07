@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shoppingmall/utility/my_dialog.dart';
 import 'package:shoppingmall/widgets/show_image.dart';
 import 'package:shoppingmall/widgets/show_title.dart';
 
@@ -23,6 +24,7 @@ class _AddProductState extends State<AddProduct> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    initialFile();
   }
 
   void initialFile() {
@@ -35,6 +37,11 @@ class _AddProductState extends State<AddProduct> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          IconButton(
+              onPressed: () => processAddProduct(),
+              icon: Icon(Icons.cloud_upload))
+        ],
         title: Text('Add Product'),
       ),
       body: LayoutBuilder(
@@ -68,11 +75,29 @@ class _AddProductState extends State<AddProduct> {
       child: ElevatedButton(
         style: MyConstant().myButtonStyle(),
         onPressed: () {
-          if (formKey.currentState!.validate()) {}
+          processAddProduct();
         },
         child: Text('Add Product'),
       ),
     );
+  }
+
+  void processAddProduct() {
+    if (formKey.currentState!.validate()) {
+      //      final product = ProductModel(nameController.text);
+      bool checkFile = true;
+      for (var item in files) {
+        if (item == null) {
+          checkFile = false;
+        }
+      }
+      if (checkFile) {
+        print('## choose 4 image success');
+      } else {
+        MyDialog()
+            .normalDialog(context, 'More Image', 'Please Choose More Image');
+      }
+    }
   }
 
   Future<Null> processImagePicker(ImageSource source, int index) async {
@@ -84,8 +109,7 @@ class _AddProductState extends State<AddProduct> {
       );
       setState(() {
         file = File(result!.path);
-        // _imageFile = result;
-        // files[index] = file;
+        files[index] = file;
       });
     } catch (e) {}
   }
@@ -133,10 +157,11 @@ class _AddProductState extends State<AddProduct> {
     return Column(
       children: [
         Container(
-          width: constraints.maxWidth * 0.75,
-          height: constraints.maxWidth * 0.75,
-          child: file == null ? Image.asset(MyConstant.image5) : Image.file(file!)
-        ),
+            width: constraints.maxWidth * 0.75,
+            height: constraints.maxWidth * 0.75,
+            child: file == null
+                ? Image.asset(MyConstant.image5)
+                : Image.file(file!)),
         Container(
           width: constraints.maxWidth * 0.75,
           child: Row(
@@ -147,7 +172,12 @@ class _AddProductState extends State<AddProduct> {
                 height: 48,
                 child: InkWell(
                   onTap: () => chooseSourceImageDialog(0),
-                  child: Image.asset(MyConstant.image5),
+                  child: files[0] == null
+                      ? Image.asset(MyConstant.image5)
+                      : Image.file(
+                          files[0]!,
+                          fit: BoxFit.cover,
+                        ),
                 ),
               ),
               Container(
@@ -155,7 +185,12 @@ class _AddProductState extends State<AddProduct> {
                 height: 48,
                 child: InkWell(
                   onTap: () => chooseSourceImageDialog(1),
-                  child: Image.asset(MyConstant.image5),
+                  child: files[1] == null
+                      ? Image.asset(MyConstant.image5)
+                      : Image.file(
+                          files[1]!,
+                          fit: BoxFit.cover,
+                        ),
                 ),
               ),
               Container(
@@ -163,7 +198,12 @@ class _AddProductState extends State<AddProduct> {
                 height: 48,
                 child: InkWell(
                   onTap: () => chooseSourceImageDialog(2),
-                  child: Image.asset(MyConstant.image5),
+                  child: files[2] == null
+                      ? Image.asset(MyConstant.image5)
+                      : Image.file(
+                          files[2]!,
+                          fit: BoxFit.cover,
+                        ),
                 ),
               ),
               Container(
@@ -171,7 +211,12 @@ class _AddProductState extends State<AddProduct> {
                 height: 48,
                 child: InkWell(
                   onTap: () => chooseSourceImageDialog(3),
-                  child: Image.asset(MyConstant.image5),
+                  child: files[3] == null
+                      ? Image.asset(MyConstant.image5)
+                      : Image.file(
+                          files[3]!,
+                          fit: BoxFit.cover,
+                        ),
                 ),
               ),
             ],
