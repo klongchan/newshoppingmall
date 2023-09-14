@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shoppingmall/utility/my_dialog.dart';
 import 'package:shoppingmall/widgets/show_image.dart';
 import 'package:shoppingmall/widgets/show_title.dart';
@@ -111,13 +112,17 @@ class _AddProductState extends State<AddProduct> {
           map['file'] =
               await MultipartFile.fromFile(item!.path, filename: nameFile);
           FormData data = FormData.fromMap(map);
-          await Dio().post(apiSaveProduct, data: data).then((value) {
+          await Dio().post(apiSaveProduct, data: data).then((value) async {
             print('Upload Succes');
             loop++;
             if (loop >= files.length) {
+              SharedPreferences preference =
+                  await SharedPreferences.getInstance();
+              String idSeller = preference.getString('id')!;
+              print('### idSeller = $idSeller');
+
               Navigator.pop(context);
             }
-            
           });
         }
       } else {
