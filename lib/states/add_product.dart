@@ -22,6 +22,9 @@ class _AddProductState extends State<AddProduct> {
   final formKey = GlobalKey<FormState>();
   List<File?> files = [];
   File? file;
+  TextEditingController nameController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
+  TextEditingController detailController = TextEditingController();
 
   @override
   void initState() {
@@ -119,7 +122,13 @@ class _AddProductState extends State<AddProduct> {
               SharedPreferences preference =
                   await SharedPreferences.getInstance();
               String idSeller = preference.getString('id')!;
-              print('### idSeller = $idSeller');
+              String nameSeller = preference.getString('name')!;
+              String name = nameController.text;
+              String price = priceController.text;
+              String detail = detailController.text;
+
+              print('### idSeller = $idSeller, nameSeller = $nameSeller');
+              print('### name = $name, price = $price, detail = $detail');
 
               Navigator.pop(context);
             }
@@ -263,6 +272,7 @@ class _AddProductState extends State<AddProduct> {
       width: constraints.maxWidth * 0.75,
       margin: EdgeInsets.only(top: 16),
       child: TextFormField(
+        controller: nameController,
         validator: (value) {
           if (value!.isEmpty) {
             return 'Please Fill Name in Blank';
@@ -299,6 +309,7 @@ class _AddProductState extends State<AddProduct> {
       width: constraints.maxWidth * 0.75,
       margin: EdgeInsets.only(top: 16),
       child: TextFormField(
+        controller: priceController,
         validator: (value) {
           if (value!.isEmpty) {
             return 'Please Fill Price in Blank';
@@ -336,6 +347,7 @@ class _AddProductState extends State<AddProduct> {
       width: constraints.maxWidth * 0.75,
       margin: EdgeInsets.only(top: 16),
       child: TextFormField(
+        controller: detailController,
         validator: (value) {
           if (value!.isEmpty) {
             return 'Please Fill Detail in Blank';
