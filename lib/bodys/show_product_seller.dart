@@ -1,5 +1,11 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shoppingmall/models/product_model.dart';
 import 'package:shoppingmall/utility/my_constant.dart';
+import 'package:shoppingmall/widgets/show_progress.dart';
 
 class ShowProductSeller extends StatefulWidget {
   const ShowProductSeller({Key? key}) : super(key: key);
@@ -9,15 +15,42 @@ class ShowProductSeller extends StatefulWidget {
 }
 
 class _ShowProductSellerState extends State<ShowProductSeller> {
+  bool load = true;
+
+  @override
+  void initState() {
+    super.initState();
+    loadValueFromAPI();
+  }
+
+  Future<Null> loadValueFromAPI() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String id = preferences.getString('id')!;
+
+    String apiGetProductWhereIdSeller =
+        '${MyConstant.domain}/shoppingmall/getProductWhereIdSeller.php?isAdd=true&idSeller=$id';
+    await Dio().get(apiGetProductWhereIdSeller).then((value) {
+      // print('value ==> $value');
+      for (var item in json.decode(value.data)) {
+        ProductModel model = ProductModel.fromMap(item);
+        print('name Product ===>> ${model.name}');
+
+        setState(() {
+          load = false;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Text('This is Show Product'),
-      floatingActionButton: FloatingActionButton(backgroundColor: MyConstant.dark,
+      body: load ? ShowProgress() : Text('Load Finish'),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: MyConstant.dark,
         onPressed: () =>
             Navigator.pushNamed(context, MyConstant.routeAddProduct),
-            child: Text('Add'),
-
+        child: Text('Add'),
       ),
     );
   }
